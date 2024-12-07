@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import javax.servlet.http.HttpSession;
 
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -81,6 +81,11 @@ public class LoginController {
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User()); // Add an empty User object for registration
         return "register"; // Corresponds to register.html
+    }
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // Invalidate the session
+        return "redirect:/login"; // Redirect to login page
     }
 
     // Handle registration form submission
