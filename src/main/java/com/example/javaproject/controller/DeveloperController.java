@@ -1,7 +1,11 @@
 package com.example.javaproject.controller;
 
+import com.example.javaproject.entity.Evaluation;
+import com.example.javaproject.entity.Project;
 import com.example.javaproject.entity.User;
+import com.example.javaproject.service.AssignmentService;
 import com.example.javaproject.service.DeveloperService;
+import com.example.javaproject.service.EvaluationService;
 import com.example.javaproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,14 +15,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
+
 
 @Controller
 public class DeveloperController {
-
+    @Autowired
+    private AssignmentService assignmentService;
     @Autowired
     private DeveloperService developerService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EvaluationService evaluationService;
     /**
      * Redirect to Update Account page with preloaded user data.
      */
@@ -103,4 +112,39 @@ public class DeveloperController {
         return "About"; // Render About.html
     }
 
+    @GetMapping("/developer/currentProjects")
+    public String showAssignedProjects(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId"); // Retrieve user ID from session
+        if (userId == null) {
+            return "redirect:/login"; // Redirect to login if the session is invalid
+        }
+
+        try {
+            // Fetch the projects assigned to the developer
+            List<Project> projects = assignmentService.getProjectsByDeveloper(userId);
+            model.addAttribute("projects", projects);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Unable to fetch assigned projects. Please try again.");
+        }
+
+        return "ConsultProject"; // Render the ConsultProject.html page
+    }
+
+
+
+
+    //evaluation
+    @GetMapping("/developer/evaluations")
+    public String showEvaluations(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId"); // Retrieve user ID from session
+        if (userId == null) {
+            return "redirect:/login"; // Redirect to login if the session is invalid
+        }
+
+        // Fetch evaluations for the developer
+        List<Evaluation> evaluations = evaluationService.getEvaluationsByDeveloper(userId);
+        model.addAttribute("evaluations", evaluations);
+
+        return "ConsultEvaluation"; // Render the ConsultEvaluations.html page
+    }
 }

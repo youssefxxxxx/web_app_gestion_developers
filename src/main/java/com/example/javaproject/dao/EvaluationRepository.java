@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
     List<Evaluation> findAllByUser(User user); // Use the correct property name
+    // Custom query to find evaluations by user ID
+    List<Evaluation> findByUserId(Long userId);
 }

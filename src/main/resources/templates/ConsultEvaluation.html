@@ -17,13 +17,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" th:href="@{/developer/home}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
+                    <a class="nav-link" th:href="@{/developer/about}">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sign out</a>
+                    <a class="nav-link" th:href="@{/login}">Sign out</a>
                 </li>
             </ul>
         </div>
@@ -49,6 +49,9 @@
                     <td th:text="${evaluation.project.title}"></td>
                     <td th:text="${evaluation.note}"></td>
                     <td th:text="${evaluation.feedback}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(evaluations)}">
+                    <td colspan="3" class="text-center">No evaluations found.</td>
                 </tr>
                 </tbody>
             </table>

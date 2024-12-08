@@ -5,7 +5,7 @@ import com.example.javaproject.entity.Evaluation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.util.List;
 
 
 @Service
@@ -19,5 +19,8 @@ public class EvaluationService implements IEvaluationService {
         }
 
         evaluationRepository.save(evaluation);
+    }
+    public List<Evaluation> getEvaluationsByDeveloper(Long userId) {
+        return evaluationRepository.findByUserId(userId);
     }
 }
