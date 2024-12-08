@@ -2,6 +2,7 @@ package com.example.javaproject.controller;
 
 import com.example.javaproject.entity.User;
 import com.example.javaproject.service.DeveloperService;
+import com.example.javaproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,8 @@ public class DeveloperController {
 
     @Autowired
     private DeveloperService developerService;
-
+    @Autowired
+    private UserService userService;
     /**
      * Redirect to Update Account page with preloaded user data.
      */
@@ -78,4 +80,27 @@ public class DeveloperController {
     public String developerHome() {
         return "DevHome"; // Render DevHome.html
     }
+
+
+
+    @GetMapping("/developer/about")
+    public String showAboutPage(HttpSession session, Model model) {
+        // Check if the user is logged in by validating the session
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login"; // Redirect to login if the session is invalid
+        }
+
+        // Fetch user information from the database using the userId
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            model.addAttribute("errorMessage", "User not found!");
+            return "redirect:/login"; // Return About.html with an error message
+        }
+
+        // Pass the user information to the Thymeleaf page
+        model.addAttribute("user", user);
+        return "About"; // Render About.html
+    }
+
 }

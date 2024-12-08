@@ -9,15 +9,25 @@
 <body>
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
   <div class="row border rounded-5 p-3 bg-white shadow box-area">
+    <!-- Left Box -->
     <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
       <p class="text-white fs-2" style="font-family: 'Courier New', monospace;">Create a New Project</p>
     </div>
+    <!-- Right Box -->
     <div class="col-md-6 right-box">
       <div class="header-text mb-4">
         <h2>Create Project</h2>
         <p>Fill in the details below to create a new project.</p>
       </div>
-      <form th:action="@{/createProject}" method="post" th:object="${project}">
+
+      <!-- Error Message -->
+      <div th:if="${errorMessage}">
+        <strong>Error:</strong>
+        <p th:text="${errorMessage}"></p>
+      </div>
+
+      <!-- Create Project Form -->
+      <form th:action="@{/chef/create}" method="post" th:object="${project}">
         <div class="input-group mb-3">
           <input type="text" name="title" class="form-control form-control-lg bg-light fs-6" placeholder="Project Title" required th:field="*{title}">
         </div>

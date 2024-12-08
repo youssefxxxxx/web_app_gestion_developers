@@ -9,25 +9,43 @@
 <body>
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
   <div class="row border rounded-5 p-3 bg-white shadow box-area">
+    <!-- Left Box -->
     <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
       <p class="text-white fs-2" style="font-family: 'Courier New', monospace;">Assign Developer</p>
     </div>
+
+    <!-- Right Box -->
     <div class="col-md-6 right-box">
       <div class="header-text mb-4">
         <h2>Assign Developer</h2>
         <p>Choose a project and a developer to assign.</p>
       </div>
-      <form th:action="@{/assignDeveloper}" method="post" th:object="${assignment}">
+
+      <!-- Error Handling -->
+      <div th:if="${errorMessage}">
+        <strong>Error:</strong>
+        <p th:text="${errorMessage}"></p>
+      </div>
+
+      <!-- Assign Developer Form -->
+      <form th:action="@{/chef/assignDeveloper}" method="post" th:object="${assignment}">
+        <!-- Project Dropdown -->
         <div class="input-group mb-3">
           <select name="project" class="form-select form-control-lg bg-light fs-6" required th:field="*{project}">
+            <option value="" disabled selected>Select a project</option>
             <option th:each="project : ${projects}" th:value="${project.idP}" th:text="${project.title}"></option>
           </select>
         </div>
+
+        <!-- Developer Dropdown -->
         <div class="input-group mb-3">
           <select name="user" class="form-select form-control-lg bg-light fs-6" required th:field="*{user}">
+            <option value="" disabled selected>Select a developer</option>
             <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.nom}"></option>
           </select>
         </div>
+
+        <!-- Submit Button -->
         <div class="input-group mb-3">
           <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">Assign</button>
         </div>

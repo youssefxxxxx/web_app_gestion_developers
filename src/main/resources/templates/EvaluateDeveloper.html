@@ -7,6 +7,29 @@
   <title>Evaluate Developer</title>
 </head>
 <body>
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Project Manager</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/chef/home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/chef/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Sign out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
   <div class="row border rounded-5 p-3 bg-white shadow box-area">
     <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
@@ -17,10 +40,28 @@
         <h2>Evaluate Developer</h2>
         <p>Provide feedback and a score for the developer.</p>
       </div>
-      <form th:action="@{/evaluateDeveloper}" method="post" th:object="${evaluation}">
+
+      <!-- Error Div -->
+      <div th:if="${errorMessage}" class="alert alert-danger">
+        <strong>Error:</strong>
+        <p th:text="${errorMessage}"></p>
+      </div>
+
+      <!-- Success Div -->
+      <div th:if="${successMessage}" class="alert alert-success">
+        <strong>Success:</strong>
+        <p th:text="${successMessage}"></p>
+      </div>
+
+      <form th:action="@{/chef/evaluateDeveloper}" method="post" th:object="${evaluation}">
         <div class="input-group mb-3">
-          <select name="user" class="form-select form-control-lg bg-light fs-6" required th:field="*{user}">
+          <select name="userId" class="form-select form-control-lg bg-light fs-6" required>
             <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.nom}"></option>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <select name="projectId" class="form-select form-control-lg bg-light fs-6" required>
+            <option th:each="project : ${projects}" th:value="${project.idP}" th:text="${project.title}"></option>
           </select>
         </div>
         <div class="input-group mb-3">

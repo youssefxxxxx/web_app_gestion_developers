@@ -25,25 +25,17 @@ public class Project {
     @Column(name = "estimated_time", nullable = false)
     private int estimatedTime; // Estimated time for project completion in hours or days
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
 
     // Default Constructor
     public Project() {
     }
 
     // Constructor with all fields
-    public Project(Long idP, String title, String description, String requiredCompetence, int estimatedTime, User createdBy) {
-        this.idP = idP;
-        this.title = title;
-        this.description = description;
-        this.requiredCompetence = requiredCompetence;
-        this.estimatedTime = estimatedTime;
-        this.createdBy = createdBy;
-    }
 
-    // Getters and Setters (if not using Lombok @Data for certain fields)
+
     public Long getIdP() {
         return idP;
     }
@@ -68,14 +60,6 @@ public class Project {
         this.description = description;
     }
 
-    public String getRequiredCompetence() {
-        return requiredCompetence;
-    }
-
-    public void setRequiredCompetence(String requiredCompetence) {
-        this.requiredCompetence = requiredCompetence;
-    }
-
     public int getEstimatedTime() {
         return estimatedTime;
     }
@@ -84,11 +68,19 @@ public class Project {
         this.estimatedTime = estimatedTime;
     }
 
-    public User getCreatedBy() {
+    public String getRequiredCompetence() {
+        return requiredCompetence;
+    }
+
+    public void setRequiredCompetence(String requiredCompetence) {
+        this.requiredCompetence = requiredCompetence;
+    }
+
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -100,7 +92,7 @@ public class Project {
                 ", description='" + description + '\'' +
                 ", requiredCompetence='" + requiredCompetence + '\'' +
                 ", estimatedTime=" + estimatedTime +
-                ", createdBy=" + createdBy +
+                ", createdBy='" + createdBy + '\'' +
                 '}';
     }
 }

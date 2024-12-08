@@ -48,11 +48,11 @@
         <tbody>
         <!-- Loop through projects -->
         <tr th:each="project : ${projects}">
-          <td th:text="${project.title}"></td>
-          <td th:text="${project.description}"></td>
-          <td th:text="${project.requiredCompetence}"></td>
-          <td th:text="${project.estimatedTime}"></td>
-          <td th:text="${project.createdBy.nom}"></td>
+          <td th:text="${title}"></td>
+          <td th:text="${description}"></td>
+          <td th:text="${requiredCompetence}"></td>
+          <td th:text="${estimatedTime}"></td>
+          <td th:text="${createdBy.nom}"></td>
         </tr>
         </tbody>
       </table>

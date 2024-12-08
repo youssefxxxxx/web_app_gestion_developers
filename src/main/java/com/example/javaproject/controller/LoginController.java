@@ -38,6 +38,8 @@ public class LoginController {
         if (existingUser != null) {
             session.setAttribute("userId", existingUser.getId()); // Store userId in the session
             session.setAttribute("role", existingUser.getRole()); // Optional: Store user role for authorization
+            System.out.println(session.getAttribute("userId"));
+            session.setAttribute("nameUser", existingUser.getNom()); // Optional: Store user role for authorization
 
             // Redirect based on role
             if ("dev".equalsIgnoreCase(existingUser.getRole())) {

@@ -5,8 +5,10 @@ import com.example.javaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class DeveloperService {
+public class DeveloperService implements IDeveloperService{
 
     @Autowired
     private UserRepository userRepository;
@@ -39,5 +41,14 @@ public class DeveloperService {
 
         // Save the updated user
         userRepository.save(user);
+    }
+    public List<User> findDevelopers(String competence, int experience) {
+        return userRepository.findDevelopersByCompetenceAndExperience(competence, experience);
+    }
+
+
+    // Method to get all developers (users with role 'dev')
+    public List<User> getAllDevelopers() {
+        return userRepository.findByRole("dev");
     }
 }

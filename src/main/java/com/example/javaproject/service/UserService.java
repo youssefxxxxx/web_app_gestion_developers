@@ -5,6 +5,9 @@ import com.example.javaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService implements IUserService {
 
@@ -32,6 +35,19 @@ public class UserService implements IUserService {
         dao.save(user);
 
         return "User registered successfully!";
+    }
+    @Override
+    public User getUserById(Long userId) {
+        // Find the user by ID, and return null if not found
+        Optional<User> userOptional = dao.findById(userId);
+        return userOptional.orElse(null); // Return null if the user is not found
+    }
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<User> getAllDevelopers() {
+        return userRepository.findByRole("dev"); // Fetch only users with the "dev" role
     }
 
 

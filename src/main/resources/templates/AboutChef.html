@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/developer/home}">Home</a>
+                    <a class="nav-link active" th:href="@{/chef/home}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="#">About</a>
@@ -34,7 +34,7 @@
 <div class="container mt-5">
     <!-- Error Message -->
     <div th:if="${errorMessage}" class="alert alert-danger text-center">
-         <span th:text="${errorMessage}"></span>
+        <span th:text="${errorMessage}"></span>
     </div>
 
     <h2 class="text-center mb-4">User Information</h2>

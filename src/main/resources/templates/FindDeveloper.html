@@ -7,6 +7,29 @@
   <title>Find Developer</title>
 </head>
 <body>
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Project Manager</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/chef/home}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/chef/aboutchef}">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/login}">Sign out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
   <div class="row border rounded-5 p-3 bg-white shadow box-area">
     <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
@@ -17,18 +40,36 @@
         <h2>Find Developer</h2>
         <p>Search for developers based on skills and experience.</p>
       </div>
-      <form th:action="@{/findDeveloper}" method="post">
+      <form th:action="@{/chef/findDeveloper}" method="post">
         <div class="mb-3">
           <label for="competence" class="form-label">Competence</label>
-          <input type="text" id="competence" name="competence" class="form-control" placeholder="Enter required skills">
+          <input type="text" id="competence" name="competence" class="form-control" placeholder="Enter required skills" th:value="${competence}" required>
         </div>
-        <div class="input-group mb-3">
-          <input type="number" name="experience" class="form-control form-control-lg bg-light fs-6" placeholder="Minimum Experience (years)">
+        <div class="mb-3">
+          <label for="experience" class="form-label">Minimum Experience</label>
+          <input type="number" id="experience" name="experience" class="form-control" placeholder="Enter years of experience" th:value="${experience}" required>
         </div>
         <div class="input-group mb-3">
           <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">Find</button>
         </div>
       </form>
+
+      <!-- Error Handling -->
+      <div th:if="${errorMessage}" class="alert alert-danger mt-3">
+        <p th:text="${errorMessage}"></p>
+      </div>
+
+      <!-- Results Section -->
+      <div th:if="${developers}" class="mt-4">
+        <h4>Results:</h4>
+        <ul class="list-group">
+          <li th:each="developer : ${developers}" class="list-group-item">
+            <strong th:text="${developer.nom}"></strong> -
+            <span th:text="${developer.competence}"></span> -
+            <span th:text="'Experience: ' + ${developer.experience} + ' years'"></span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
