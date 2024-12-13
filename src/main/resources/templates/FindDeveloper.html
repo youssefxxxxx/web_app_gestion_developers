@@ -19,27 +19,61 @@
     .main-container {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 15px;
+      gap: 15px; /* Slightly increased gap */
+    }
+
+    .main-container > div {
+      border: 1px solid #e0e0e0; /* Add light border */
+      border-radius: 5px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 400px; /* Enforce minimum height */
     }
 
     .scrollable-table {
-      max-height: 200px;
+      max-height: 200px; /* Increased from 100px */
       overflow-y: auto;
-      font-size: 12px;
+      font-size: 11px;
+      flex-grow: 1; /* Allow scrollable area to expand */
     }
 
     .form-label,
     .btn {
-      font-size: 12px;
+      font-size: 11px;
     }
 
     table {
-      font-size: 12px;
+      font-size: 11px;
+      width: 100%; /* Ensure full width of table */
     }
 
     h4,
     h5 {
-      font-size: 14px;
+      font-size: 12px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #e0e0e0; /* Add subtle separator */
+      padding-bottom: 5px;
+    }
+
+    .container-fluid {
+      padding: 10px;
+    }
+
+    .btn {
+      padding: 5px 10px;
+    }
+
+    select {
+      font-size: 11px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .main-container {
+        grid-template-columns: 1fr; /* Stack vertically on smaller screens */
+      }
     }
   </style>
 </head>
@@ -189,19 +223,19 @@
           <div>
             <h4>Find Developers</h4>
             <form th:action="@{/chef/findDeveloper}" method="post">
-              <div class="mb-2">
+              <div class="mb-1">
                 <label for="competence" class="form-label">Competence</label>
                 <input type="text" id="competence" name="competence" class="form-control" placeholder="Enter required skills" th:value="${competence}" required>
               </div>
-              <div class="mb-2">
+              <div class="mb-1">
                 <label for="experience" class="form-label">Minimum Experience</label>
                 <input type="number" id="experience" name="experience" class="form-control" placeholder="Years" th:value="${experience}" required>
               </div>
-              <button type="submit" class="btn btn-primary">Search</button>
+              <button type="submit" class="btn btn-primary btn-sm">Search</button>
             </form>
 
             <!-- Search Results -->
-            <div th:if="${developers}" class="mt-3">
+            <div th:if="${developers}" class="mt-2">
               <h5>Results:</h5>
               <div class="scrollable-table">
                 <table class="table table-bordered">
@@ -245,7 +279,31 @@
             </div>
           </div>
 
-
+          <!-- Assign Developer to Project -->
+          <div>
+            <h5>Assign Developer to Project</h5>
+            <!-- Error Message Section -->
+            <div th:if="${errorMessage}"  role="alert">
+              <span th:text="${errorMessage}"></span>
+            </div>
+            <form th:action="@{/chef/assignDeveloper}" method="post">
+              <div class="mb-1">
+                <label for="developerSelect" class="form-label">Select Developer</label>
+                <select id="developerSelect" name="developerId" class="form-select form-select-sm" required>
+                  <option value="" disabled selected>Select a developer</option>
+                  <option th:each="developer : ${developers}" th:value="${developer.id}" th:text="${developer.nom}"></option>
+                </select>
+              </div>
+              <div class="mb-1">
+                <label for="projectSelect" class="form-label">Select Project</label>
+                <select id="projectSelect" name="projectId" class="form-select form-select-sm" required>
+                  <option value="" disabled selected>Select a project</option>
+                  <option th:each="project : ${projects}" th:value="${project.idP}" th:text="${project.title}"></option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-success btn-sm">Assign</button>
+            </form>
+          </div>
 
         </div>
 

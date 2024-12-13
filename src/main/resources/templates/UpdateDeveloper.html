@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Update Account</title>
+  <title>Update Developer</title>
 
   <!-- Custom fonts and styles -->
   <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet">
@@ -31,6 +31,12 @@
 
     h1 {
       font-size: 20px;
+    }
+
+    .scrollable-table {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -67,10 +73,63 @@
 
     <!-- Account Management -->
     <div class="sidebar-heading">Account Management</div>
-    <li class="nav-item active">
+    <li class="nav-item">
       <a class="nav-link" th:href="@{/chef/updateAccount}">
         <i class="fas fa-fw fa-user-cog"></i>
         <span>Update My Account</span>
+      </a>
+    </li>
+
+    <!-- Developer CRUD -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#developerCrudMenu"
+         aria-expanded="false" aria-controls="developerCrudMenu">
+        <i class="fas fa-fw fa-users-cog"></i>
+        <span>Developer CRUD</span>
+      </a>
+      <div id="developerCrudMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header">Manage Developers:</h6>
+          <a class="collapse-item" th:href="@{/chef/createDeveloper}">Create Developer</a>
+          <a class="collapse-item" th:href="@{/chef/updateDeveloper}">Update Developer</a>
+          <a class="collapse-item" th:href="@{/chef/deleteDeveloper}">Delete Developer</a>
+          <a class="collapse-item" th:href="@{/chef/viewDevelopers}">View Developers</a>
+        </div>
+      </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Project Management -->
+    <div class="sidebar-heading">Project Management</div>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/createProject}">
+        <i class="fas fa-fw fa-folder-plus"></i>
+        <span>Create Project</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/updateProject}">
+        <i class="fas fa-fw fa-edit"></i>
+        <span>Update Project</span>
+      </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Additional Features -->
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/findDeveloper}">
+        <i class="fas fa-fw fa-search"></i>
+        <span>Find Developer</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/evaluateDeveloper}">
+        <i class="fas fa-fw fa-star"></i>
+        <span>Evaluate Developer</span>
       </a>
     </li>
 
@@ -98,7 +157,7 @@
           <!-- User Information Dropdown -->
           <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="mr-2 d-none d-lg-inline text-gray-600 small" >User</span>
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${nameUser}">Chef</span>
               <img class="img-profile rounded-circle" src="/img/undraw_profile.svg">
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -122,40 +181,51 @@
       <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Update My Account</h1>
+        <h1 class="h3 mb-4 text-gray-800">Update Developer</h1>
 
-        <!-- Error Message -->
-        <div th:if="${errorMessage}" class="alert alert-danger">
-          <p th:text="${errorMessage}"></p>
+        <!-- Developer Table -->
+        <div class="scrollable-table mb-4">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Competence</th>
+              <th>Experience</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="developer : ${developers}">
+              <td th:text="${developer.nom}"></td>
+              <td th:text="${developer.competence}"></td>
+              <td th:text="${developer.experience} + ' years'"></td>
+              <td>
+                <form th:action="@{/chef/updateDeveloper}" method="get">
+                  <input type="hidden" name="developerId" th:value="${developer.id}">
+                  <button type="submit" class="btn btn-sm btn-primary">Edit</button>
+                </form>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
 
-        <!-- Update Account Form -->
-        <form th:action="@{/chef/updateAccount}" method="post">
+        <!-- Update Developer Form -->
+        <form th:action="@{/chef/updateDeveloper}" method="post" th:object="${developer}">
+          <input type="hidden" name="id" th:field="*{id}">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="nom" class="form-control" id="name" placeholder="Enter developer name" th:field="*{nom}" required>
+          </div>
           <div class="mb-3">
             <label for="competence" class="form-label">Competence</label>
-            <input type="text" name="competence" class="form-control" id="competence" th:value="${user.competence}" required>
+            <input type="text" name="competence" class="form-control" id="competence" placeholder="Enter developer competence" th:field="*{competence}" required>
           </div>
           <div class="mb-3">
             <label for="experience" class="form-label">Experience (years)</label>
-            <input type="number" name="experience" class="form-control" id="experience" th:value="${user.experience}" required>
+            <input type="number" name="experience" class="form-control" id="experience" placeholder="Enter experience in years" th:field="*{experience}" required>
           </div>
-          <div class="mb-3">
-            <label for="newPassword" class="form-label">New Login</label>
-            <input type="text" name="newLogin" class="form-control" id="newLogin" placeholder="Enter new login">
-          </div>
-          <div class="mb-3">
-            <label for="oldPassword" class="form-label">Current Password</label>
-            <input type="password" name="oldPassword" class="form-control" id="oldPassword" placeholder="Enter current password" required>
-          </div>
-          <div class="mb-3">
-            <label for="newPassword" class="form-label">New Password</label>
-            <input type="password" name="newPassword" class="form-control" id="newPassword" placeholder="Enter new password">
-          </div>
-          <div class="mb-3">
-            <label for="newConfirmedPassword" class="form-label">Confirm New Password</label>
-            <input type="password" name="newConfirmedPassword" class="form-control" id="newConfirmedPassword" placeholder="Confirm new password">
-          </div>
-          <button type="submit" class="btn btn-primary">Update Account</button>
+          <button type="submit" class="btn btn-primary">Update Developer</button>
         </form>
 
       </div>

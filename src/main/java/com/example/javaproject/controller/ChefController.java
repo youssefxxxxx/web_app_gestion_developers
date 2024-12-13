@@ -98,6 +98,7 @@ public class ChefController {
     @PostMapping("/chef/updateAccount")
     public String handleUpdateAccount(
             HttpSession session,
+            String newLogin,
             String oldPassword,
             String newPassword,
             String newConfirmedPassword,
@@ -112,11 +113,11 @@ public class ChefController {
 
         try {
             // Update the user account
-            developerService.updateAccount(userId, oldPassword, newPassword, newConfirmedPassword, competence, experience);
+            developerService.updateAccount(userId,newLogin,oldPassword, newPassword, newConfirmedPassword, competence, experience);
 
             // On success, invalidate the session and redirect to login
             session.invalidate();
-            return "redirect:/login";
+            return "redirect:/chef/home";
         } catch (RuntimeException ex) {
             // Handle errors and display them on the same page
             model.addAttribute("errorMessage", ex.getMessage());
@@ -196,7 +197,6 @@ public class ChefController {
         try {
             // Call the service to find developers
             List<User> developers = developerService.findDevelopers(competence, experience);
-            System.out.println(developers);
             if (developers.isEmpty()) {
                 model.addAttribute("errorMessage", "No developers found matching the criteria.");
             } else {
@@ -227,6 +227,12 @@ public class ChefController {
                 throw new RuntimeException("Invalid project or developer ID provided.");
             }
 
+            // Check if the developer is already assigned to the project
+            boolean isAlreadyAssigned = assignmentService.isDeveloperAssignedToProject(developerId, projectId);
+            if (isAlreadyAssigned) {
+                throw new RuntimeException("Developer is already assigned to this project.");
+            }
+
             // Create and save the Assignment
             Assignment assignment = new Assignment();
             assignment.setProject(project);
@@ -249,6 +255,7 @@ public class ChefController {
             return "FindDeveloper"; // Stay on the same page with an error message
         }
     }
+
 
 
 
@@ -313,9 +320,65 @@ public class ChefController {
             return "EvaluateDeveloper";
         }
     }
-    @GetMapping("/dashboardChef")
-    public String DashboardChef() {
-        return "DashbordChef"; // Render DashbordChef.html
+    // GetMapping for displaying the Create Developer page
+    @GetMapping("/chef/createDeveloper")
+    public String showCreateDeveloperPage(Model model) {
+        // Add an empty User object to the model to bind with the form
+        model.addAttribute("developer", new User());
+        return "CreateDeveloper"; // Render CreateDeveloper.html
     }
+
+    // PostMapping for handling the creation of a new developer
+    @PostMapping("/chef/createDeveloper")
+    public String handleCreateDeveloperForm(
+            @ModelAttribute("developer") User developer,
+            Model model) {
+        try {
+            System.out.println(developer);
+            // Save the developer using the service
+            userService.saveDeveloper(developer);
+
+            // Redirect to the Developer CRUD or another success page
+            return "CreateDeveloper";
+        } catch (Exception ex) {
+            // Handle errors and display them on the same page
+            model.addAttribute("errorMessage", "Error creating developer: " + ex.getMessage());
+            return "CreateDeveloper"; // Stay on the same page with the error message
+        }
+    }
+
+    @GetMapping("/chef/updateDeveloper")
+    public String showUpdateDeveloperPage(Model model) {
+        // Fetch all developers to display in the table
+        List<User> developers = userService.getAllDevelopers();
+        model.addAttribute("developers", developers);
+
+        // Create a new User object for the update form
+        model.addAttribute("developer", new User());
+        return "UpdateDeveloper";
+    }
+    @PostMapping("/chef/updateDeveloper")
+    public String handleUpdateDeveloperForm(
+            @ModelAttribute("developer") User updatedDeveloper,
+            Model model) {
+        try {
+            System.out.println(updatedDeveloper);
+            // Update the developer in the database
+            userService.updateDeveloper(updatedDeveloper);
+
+            // Redirect to the update page to display updated data
+            return "redirect:/chef/home";
+        } catch (Exception e) {
+            // If an error occurs, reload the page with an error message
+            model.addAttribute("errorMessage", e.getMessage());
+
+            // Re-fetch developers to display in the table
+            List<User> developers = userService.getAllDevelopers();
+            model.addAttribute("developers", developers);
+            System.out.println("error");
+            return "UpdateDeveloper";
+        }
+    }
+
 
 }

@@ -32,7 +32,7 @@ public class DeveloperController {
      * Redirect to Update Account page with preloaded user data.
      */
     @GetMapping("/developer/updateAccount")
-    public String updateAccountPage(HttpSession session, Model model) {
+    public String updateAccountPage2(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
         if (userId == null) {
             return "redirect:/login"; // Redirect to login if session expired
@@ -49,8 +49,9 @@ public class DeveloperController {
      * Handle Update Account form submission.
      */
     @PostMapping("/developer/updateAccount")
-    public String handleUpdateAccount(
+    public String handleUpdateAccount2(
             HttpSession session,
+            String newLogin,
             String oldPassword,
             String newPassword,
             String newConfirmedPassword,
@@ -65,7 +66,7 @@ public class DeveloperController {
 
         try {
             // Update the user account
-            developerService.updateAccount(userId, oldPassword, newPassword, newConfirmedPassword, competence, experience);
+            developerService.updateAccount(userId,newLogin, oldPassword, newPassword, newConfirmedPassword, competence, experience);
 
             // On success, invalidate the session and redirect to login
             session.invalidate();

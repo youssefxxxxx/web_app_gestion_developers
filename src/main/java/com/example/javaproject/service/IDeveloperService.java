@@ -17,14 +17,16 @@ public interface IDeveloperService {
     /**
      * Update the account details of a user.
      *
-     * @param userId ID of the user to update.
-     * @param oldPassword User's old password.
-     * @param newPassword User's new password.
-     * @param confirmPassword Confirmation of the new password.
-     * @param competence User's updated competence.
-     * @param experience User's updated experience.
+     * @param userId           ID of the user to update.
+     * @param newLogin         New login for the user.
+     * @param oldPassword      User's old password.
+     * @param newPassword      User's new password.
+     * @param confirmPassword  Confirmation of the new password.
+     * @param competence       User's updated competence.
+     * @param experience       User's updated experience.
      */
-    void updateAccount(Long userId, String oldPassword, String newPassword, String confirmPassword, String competence, int experience);
+    void updateAccount(Long userId, String newLogin, String oldPassword, String newPassword,
+                       String confirmPassword, String competence, int experience);
 
     /**
      * Find developers based on their competence and experience.
@@ -34,4 +36,11 @@ public interface IDeveloperService {
      * @return List of developers matching the criteria.
      */
     List<User> findDevelopers(String competence, int experience);
+
+    /**
+     * Get all developers (users with role 'dev').
+     *
+     * @return List of all developers.
+     */
+    List<User> getAllDevelopers();
 }

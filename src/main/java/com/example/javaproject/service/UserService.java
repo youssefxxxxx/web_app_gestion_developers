@@ -51,4 +51,18 @@ public class UserService implements IUserService {
     }
 
 
+    public void saveDeveloper(User developer) {
+        userRepository.save(developer);
+    }
+    public void updateDeveloper(User updatedDeveloper) {
+        User existingDeveloper = userRepository.findById(updatedDeveloper.getId())
+                .orElseThrow(() -> new RuntimeException("Developer not found"));
+        // Update fields
+        existingDeveloper.setNom(updatedDeveloper.getNom());
+        existingDeveloper.setCompetence(updatedDeveloper.getCompetence());
+        existingDeveloper.setExperience(updatedDeveloper.getExperience());
+        existingDeveloper.setMotDePasse(updatedDeveloper.getMotDePasse());
+        // Save updated developer
+        userRepository.save(existingDeveloper);
+    }
 }
