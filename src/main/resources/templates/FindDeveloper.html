@@ -1,77 +1,284 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-  <title>Find Developer</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Find and Assign Developers</title>
+
+  <!-- Custom fonts and styles -->
+  <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet">
+  <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <style>
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+
+    .scrollable-table {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+
+    .form-label,
+    .btn {
+      font-size: 12px;
+    }
+
+    table {
+      font-size: 12px;
+    }
+
+    h4,
+    h5 {
+      font-size: 14px;
+    }
+  </style>
 </head>
-<body>
-<!-- Top Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="#">Project Manager</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/chef/home}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/chef/aboutchef}">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/login}">Sign out</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="row border rounded-5 p-3 bg-white shadow box-area">
-    <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
-      <p class="text-white fs-2" style="font-family: 'Courier New', monospace;">Find a Developer</p>
-    </div>
-    <div class="col-md-6 right-box">
-      <div class="header-text mb-4">
-        <h2>Find Developer</h2>
-        <p>Search for developers based on skills and experience.</p>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/chef/home}">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <i class="fas fa-project-diagram"></i>
       </div>
-      <form th:action="@{/chef/findDeveloper}" method="post">
-        <div class="mb-3">
-          <label for="competence" class="form-label">Competence</label>
-          <input type="text" id="competence" name="competence" class="form-control" placeholder="Enter required skills" th:value="${competence}" required>
-        </div>
-        <div class="mb-3">
-          <label for="experience" class="form-label">Minimum Experience</label>
-          <input type="number" id="experience" name="experience" class="form-control" placeholder="Enter years of experience" th:value="${experience}" required>
-        </div>
-        <div class="input-group mb-3">
-          <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">Find</button>
-        </div>
-      </form>
+      <div class="sidebar-brand-text mx-3">Chef Dashboard</div>
+    </a>
 
-      <!-- Error Handling -->
-      <div th:if="${errorMessage}" class="alert alert-danger mt-3">
-        <p th:text="${errorMessage}"></p>
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Items -->
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/home}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Account Management -->
+    <div class="sidebar-heading">Account Management</div>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/updateAccount}">
+        <i class="fas fa-fw fa-user-cog"></i>
+        <span>Update My Account</span>
+      </a>
+    </li>
+
+    <!-- Developer CRUD -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#developerCrudMenu"
+         aria-expanded="false" aria-controls="developerCrudMenu">
+        <i class="fas fa-fw fa-users-cog"></i>
+        <span>Developer CRUD</span>
+      </a>
+      <div id="developerCrudMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header">Manage Developers:</h6>
+          <a class="collapse-item" th:href="@{/chef/createDeveloper}">Create Developer</a>
+          <a class="collapse-item" th:href="@{/chef/updateDeveloper}">Update Developer</a>
+          <a class="collapse-item" th:href="@{/chef/deleteDeveloper}">Delete Developer</a>
+          <a class="collapse-item" th:href="@{/chef/viewDevelopers}">View Developers</a>
+        </div>
       </div>
+    </li>
 
-      <!-- Results Section -->
-      <div th:if="${developers}" class="mt-4">
-        <h4>Results:</h4>
-        <ul class="list-group">
-          <li th:each="developer : ${developers}" class="list-group-item">
-            <strong th:text="${developer.nom}"></strong> -
-            <span th:text="${developer.competence}"></span> -
-            <span th:text="'Experience: ' + ${developer.experience} + ' years'"></span>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Project Management -->
+    <div class="sidebar-heading">Project Management</div>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/createProject}">
+        <i class="fas fa-fw fa-folder-plus"></i>
+        <span>Create Project</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/updateProject}">
+        <i class="fas fa-fw fa-edit"></i>
+        <span>Update Project</span>
+      </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Additional Features -->
+    <li class="nav-item active">
+      <a class="nav-link" th:href="@{/chef/findDeveloper}">
+        <i class="fas fa-fw fa-search"></i>
+        <span>Find Developer</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/chef/evaluateDeveloper}">
+        <i class="fas fa-fw fa-star"></i>
+        <span>Evaluate Developer</span>
+      </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler -->
+    <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+  </ul>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <ul class="navbar-nav ml-auto align-items-center">
+
+          <!-- User Information Dropdown -->
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${nameUser}">Chef</span>
+              <img class="img-profile rounded-circle" src="/img/undraw_profile.svg">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+              <a class="dropdown-item" th:href="@{/chef/aboutchef}">
+                <i class="fas fa-info-circle fa-sm fa-fw mr-2 text-gray-400"></i>
+                About
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" th:href="@{/logout}">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Logout
+              </a>
+            </div>
           </li>
+
         </ul>
+      </nav>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <div class="main-container">
+
+          <!-- Find Developer Section -->
+          <div>
+            <h4>Find Developers</h4>
+            <form th:action="@{/chef/findDeveloper}" method="post">
+              <div class="mb-2">
+                <label for="competence" class="form-label">Competence</label>
+                <input type="text" id="competence" name="competence" class="form-control" placeholder="Enter required skills" th:value="${competence}" required>
+              </div>
+              <div class="mb-2">
+                <label for="experience" class="form-label">Minimum Experience</label>
+                <input type="number" id="experience" name="experience" class="form-control" placeholder="Years" th:value="${experience}" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
+            <!-- Search Results -->
+            <div th:if="${developers}" class="mt-3">
+              <h5>Results:</h5>
+              <div class="scrollable-table">
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Competence</th>
+                    <th>Experience</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="developer : ${developers}">
+                    <td th:text="${developer.nom}"></td>
+                    <td th:text="${developer.competence}"></td>
+                    <td th:text="${developer.experience} + ' years'"></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects Section -->
+          <div>
+            <h4>Available Projects</h4>
+            <div class="scrollable-table">
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Required Competence</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="project : ${projects}">
+                  <td th:text="${project.title}"></td>
+                  <td th:text="${project.requiredCompetence}"></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+        </div>
+
       </div>
+      <!-- /.container-fluid -->
+
     </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Copyright &copy; Your Website 2024</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+
   </div>
+  <!-- End of Content Wrapper -->
+
 </div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button -->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

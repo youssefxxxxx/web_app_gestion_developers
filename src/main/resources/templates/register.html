@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/style.css}">
     <title>Register</title>
 </head>
-<body>
+<body class="bg-gradient-primary">
 
 <!----------------------- Main Container -------------------------->
 
@@ -20,12 +20,14 @@
 
         <!--------------------------- Left Box ----------------------------->
 
-        <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
+        <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #2E59D9;">
             <div class="featured-image mb-3">
                 <img th:src="@{/iMAGE/UIR-IMG.jpg}" alt="My Image" class="img-fluid">
             </div>
-            <p class="text-white fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">Create an Account</p>
-            <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace;">Join our platform and get started today!</small>
+            <p class="text-black fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">Create an Account</p>
+            <small class="text-black text-wrap text-center" style="width: 17rem; font-family: 'Courier New', Courier, monospace;">
+                Join our platform and get started today!
+            </small>
         </div>
 
         <!--------------------------- Right Box ---------------------------->
@@ -65,7 +67,7 @@
                         <input type="number" name="experience" class="form-control form-control-lg bg-light fs-6" placeholder="Experience (years)" required th:field="*{experience}">
                     </div>
                     <div class="input-group mb-3">
-                        <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">Register</button>
+                        <button type="submit" class="btn btn-lg text-white w-100 fs-6" style="background-color: #2E59D9;">Register</button>
                     </div>
                 </form>
 

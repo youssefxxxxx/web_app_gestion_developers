@@ -14,5 +14,6 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     @Query("SELECT a.project FROM Assignment a WHERE a.user.id = :userId")
     List<Project> findProjectsByUserId(@Param("userId") Long userId);
 
+    boolean existsByProject_IdPAndUser_Id(Long idP, Long userId);
 
 }

@@ -30,5 +30,8 @@ public class AssignmentService {
     public List<Project> getProjectsByDeveloper(Long userId) {
         return dao.findProjectsByUserId(userId);
     }
+    public boolean isDeveloperAssignedToProject(Long userId, Long projectId) {
+        return dao.existsByProject_IdPAndUser_Id(projectId, userId);
+    }
 
 }

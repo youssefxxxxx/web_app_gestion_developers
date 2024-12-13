@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ChefController {
@@ -128,7 +130,7 @@ public class ChefController {
     }
     //for creating page
     // Display the Create Project page
-    @GetMapping("/chef/create")
+    @GetMapping("/chef/createProject")
     public String showCreateProjectPage(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId"); // Check if the user is logged in
         String nameUser=(String) session.getAttribute("nameUser");
@@ -140,7 +142,7 @@ public class ChefController {
         return "CreateProject"; // Render CreateProject.html
     }
     // Handle the Create Project form submission
-    @PostMapping("/chef/create")
+    @PostMapping("/chef/createProject")
     public String handleCreateProjectForm(
             @ModelAttribute("project") Project project,
             HttpSession session,
@@ -168,62 +170,24 @@ public class ChefController {
     }
     //to assign
 
-    @GetMapping("/chef/assignDeveloper")
-    public String showAssignDeveloperPage(HttpSession session, Model model) {
+    // Combined GetMapping for FindDeveloper and AssignDeveloper
+    @GetMapping("/chef/findDeveloper")
+    public String showFindAndAssignDeveloperPage(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
             return "redirect:/login"; // Redirect to login if session expired
         }
 
-        // Fetch all projects and developers to populate the dropdowns
+        // Fetch all projects and initialize developers list as null
         List<Project> projects = projectService.getAllProjects();
-        List<User> developers = userService.getAllDevelopers();
+        model.addAttribute("projects", projects); // Add projects to the model
+        model.addAttribute("developers", null);   // Initialize developers list as null
+        model.addAttribute("assignment", new Assignment()); // Empty Assignment object for form
 
-        // Add data to the model for Thymeleaf
-        model.addAttribute("projects", projects);
-        model.addAttribute("users", developers);
-        model.addAttribute("assignment", new Assignment()); // Empty Assignment object for the form
-
-        return "AssignDeveloper"; // Render AssignDeveloper.html
-    }
-    @PostMapping("/chef/assignDeveloper")
-    public String handleAssignDeveloperForm(
-            @ModelAttribute("assignment") Assignment assignment,
-            Model model) {
-        try {
-            // Save the assignment in the database
-            assignmentService.assignDeveloperToProject(assignment);
-            System.out.println(assignment);
-            // Redirect to a success or home page
-            return "redirect:/chef/home";
-        } catch (RuntimeException ex) {
-            // Handle errors and display them on the same page
-            model.addAttribute("errorMessage", ex.getMessage());
-
-            // Re-fetch projects and developers for the dropdowns
-            List<Project> projects = projectService.getAllProjects();
-            List<User> developers = userService.getAllDevelopers();
-            model.addAttribute("projects", projects);
-            model.addAttribute("users", developers);
-
-            return "AssignDeveloper"; // Stay on the same page with an error message
-        }
+        return "FindDeveloper"; // Render the FindDeveloper.html page
     }
 
-    //find developer
-
-    /**
-     * Display the "Find Developer" page.
-     */
-    @GetMapping("/chef/findDeveloper")
-    public String showFindDeveloperPage(Model model) {
-        model.addAttribute("developers", null); // Initialize developers list as null
-        return "FindDeveloper"; // Render the "FindDeveloper.html" page
-    }
-
-    /**
-     * Handle the search for developers.
-     */
+    // PostMapping for searching developers
     @PostMapping("/chef/findDeveloper")
     public String handleFindDeveloper(
             @RequestParam("competence") String competence,
@@ -232,7 +196,7 @@ public class ChefController {
         try {
             // Call the service to find developers
             List<User> developers = developerService.findDevelopers(competence, experience);
-
+            System.out.println(developers);
             if (developers.isEmpty()) {
                 model.addAttribute("errorMessage", "No developers found matching the criteria.");
             } else {
@@ -242,28 +206,79 @@ public class ChefController {
             model.addAttribute("errorMessage", "An error occurred while searching for developers: " + e.getMessage());
         }
 
+        // Re-fetch all projects for the dropdown
+        List<Project> projects = projectService.getAllProjects();
+        model.addAttribute("projects", projects);
+
         return "FindDeveloper"; // Stay on the same page and display the results
     }
 
+    @PostMapping("/chef/assignDeveloper")
+    public String handleAssignDeveloperForm(
+            @RequestParam("developerId") Long developerId,
+            @RequestParam("projectId") Long projectId,
+            Model model) {
+        try {
+            // Fetch the Project and User entities directly
+            Project project = projectService.getProjectById(projectId);
+            User developer = userService.getUserById(developerId);
+
+            if (project == null || developer == null) {
+                throw new RuntimeException("Invalid project or developer ID provided.");
+            }
+
+            // Create and save the Assignment
+            Assignment assignment = new Assignment();
+            assignment.setProject(project);
+            assignment.setUser(developer);
+
+            assignmentService.assignDeveloperToProject(assignment);
+
+            // Redirect to the home page after successful assignment
+            return "redirect:/chef/home";
+        } catch (RuntimeException ex) {
+            // Handle errors and display them on the same page
+            model.addAttribute("errorMessage", ex.getMessage());
+
+            // Re-fetch projects and developers for the dropdowns
+            List<Project> projects = projectService.getAllProjects();
+            List<User> developers = userService.getAllDevelopers();
+            model.addAttribute("projects", projects);
+            model.addAttribute("developers", developers);
+
+            return "FindDeveloper"; // Stay on the same page with an error message
+        }
+    }
+
+
+
     //Evaluate dev
     @GetMapping("/chef/evaluateDeveloper")
-    public String showEvaluateDeveloperPage(Model model) {
+    public String showEvaluateDeveloperPage(
+            @RequestParam(value = "userId", required = false) Long userId,
+            Model model) {
         try {
-            // Fetch only developers and all projects
-            List<User> developers = userService.getAllDevelopers(); // Method to fetch only developers
-            List<Project> projects = projectService.getAllProjects();
+            // Fetch all developers
+            List<User> developers = userService.getAllDevelopers();
+            model.addAttribute("users", developers);
 
-            // Add them to the model
-            model.addAttribute("users", developers); // Pass developers to the view
+            // Fetch projects assigned to the selected developer (if any)
+            List<Project> projects = (userId != null)
+                    ? assignmentService.getProjectsByDeveloper(userId)
+                    : new ArrayList<>();
             model.addAttribute("projects", projects);
-            model.addAttribute("evaluation", new Evaluation()); // Bind an empty Evaluation object
 
-            return "EvaluateDeveloper"; // Render the HTML page
+            // Add an empty evaluation object for the form binding
+            model.addAttribute("evaluation", new Evaluation());
+            model.addAttribute("selectedUserId", userId); // To retain selected developer
+
+            return "EvaluateDeveloper"; // Render the EvaluateDeveloper.html
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error loading data: " + e.getMessage());
+            model.addAttribute("errorMessage", "Error loading evaluation page: " + e.getMessage());
             return "EvaluateDeveloper";
         }
     }
+
 
 
 
@@ -275,14 +290,14 @@ public class ChefController {
             Model model) {
 
         try {
-            // Fetch the project and user
+            // Fetch the project and validate that the user is assigned to it
             Project project = projectService.getProjectById(projectId);
-            User user = userService.getUserById(userId);
-
-            if (project == null || user == null) {
-                model.addAttribute("errorMessage", "Invalid project or user selected.");
+            if (project == null || !assignmentService.isDeveloperAssignedToProject(userId, projectId)) {
+                model.addAttribute("errorMessage", "The developer is not assigned to the selected project.");
                 return "EvaluateDeveloper";
             }
+
+            User user = userService.getUserById(userId);
 
             // Set the project and user in the evaluation object
             evaluation.setProject(project);
@@ -292,10 +307,15 @@ public class ChefController {
             evaluationService.saveEvaluation(evaluation);
 
             model.addAttribute("successMessage", "Evaluation submitted successfully!");
-            return "EvaluateDeveloper";
+            return "redirect:/chef/evaluateDeveloper";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error saving evaluation: " + e.getMessage());
             return "EvaluateDeveloper";
         }
     }
+    @GetMapping("/dashboardChef")
+    public String DashboardChef() {
+        return "DashbordChef"; // Render DashbordChef.html
+    }
+
 }

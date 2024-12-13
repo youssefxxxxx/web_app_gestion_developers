@@ -13,11 +13,11 @@ public class Assignment {
     @Column(name = "id_a")
     private Long idA; // Assignment ID
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_projet", nullable = false)
     private Project project; // Foreign key referencing the Project entity
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private User user; // Foreign key referencing the User entity
 
@@ -26,13 +26,12 @@ public class Assignment {
     }
 
     // Constructor with all fields
-    public Assignment(Long idA, Project project, User user) {
-        this.idA = idA;
+    public Assignment(Project project, User user) {
         this.project = project;
         this.user = user;
     }
 
-    // Getters and Setters (if not using Lombok @Data for specific fields)
+    // Getters and Setters
     public Long getIdA() {
         return idA;
     }
@@ -61,8 +60,8 @@ public class Assignment {
     public String toString() {
         return "Assignment{" +
                 "idA=" + idA +
-                ", project=" + project +
-                ", user=" + user +
+                ", project=" + project.getIdP() + // Avoid fetching full object to prevent lazy-loading issues
+                ", user=" + user.getId() +
                 '}';
     }
 }
