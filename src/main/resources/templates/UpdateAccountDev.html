@@ -44,11 +44,11 @@
   <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/chef/home}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/developer/home}">
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="fas fa-project-diagram"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">Chef Dashboard</div>
+      <div class="sidebar-brand-text mx-3">Dev Dashboard</div>
     </a>
 
     <!-- Divider -->
@@ -56,7 +56,7 @@
 
     <!-- Nav Items -->
     <li class="nav-item">
-      <a class="nav-link" th:href="@{/chef/home}">
+      <a class="nav-link" th:href="@{/developer/home}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span>
       </a>
@@ -68,7 +68,7 @@
     <!-- Account Management -->
     <div class="sidebar-heading">Account Management</div>
     <li class="nav-item active">
-      <a class="nav-link" th:href="@{/chef/updateAccount}">
+      <a class="nav-link" th:href="@{/developer/updateAccount}">
         <i class="fas fa-fw fa-user-cog"></i>
         <span>Update My Account</span>
       </a>
@@ -102,7 +102,7 @@
               <img class="img-profile rounded-circle" src="/iMAGE/undraw_profile.svg">
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-              <a class="dropdown-item" th:href="@{/chef/aboutchef}">
+              <a class="dropdown-item" th:href="@{/developer/about}">
                 <i class="fas fa-info-circle fa-sm fa-fw mr-2 text-gray-400"></i>
                 About
               </a>
@@ -130,7 +130,7 @@
         </div>
 
         <!-- Update Account Form -->
-        <form th:action="@{/chef/updateAccount}" method="post">
+        <form th:action="@{/developer/updateAccount}" method="post">
           <div class="mb-3">
             <label for="competence" class="form-label">Competence</label>
             <input type="text" name="competence" class="form-control" id="competence" th:value="${user.competence}" required>

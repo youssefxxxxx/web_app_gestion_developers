@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Update Developer</title>
+  <title>Update Project</title>
 
   <!-- Custom fonts and styles -->
   <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet">
@@ -20,8 +20,12 @@
       padding: 15px;
     }
 
-    .form-label,
-    .btn {
+    .project-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .form-label, .btn, .form-control {
       font-size: 14px;
     }
 
@@ -31,12 +35,6 @@
 
     h1 {
       font-size: 20px;
-    }
-
-    .scrollable-table {
-      max-height: 300px;
-      overflow-y: auto;
-      font-size: 14px;
     }
   </style>
 </head>
@@ -71,36 +69,6 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Account Management -->
-    <div class="sidebar-heading">Account Management</div>
-    <li class="nav-item">
-      <a class="nav-link" th:href="@{/chef/updateAccount}">
-        <i class="fas fa-fw fa-user-cog"></i>
-        <span>Update My Account</span>
-      </a>
-    </li>
-
-    <!-- Developer CRUD -->
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#developerCrudMenu"
-         aria-expanded="false" aria-controls="developerCrudMenu">
-        <i class="fas fa-fw fa-users-cog"></i>
-        <span>Developer CRUD</span>
-      </a>
-      <div id="developerCrudMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Manage Developers:</h6>
-          <a class="collapse-item" th:href="@{/chef/createDeveloper}">Create Developer</a>
-          <a class="collapse-item" th:href="@{/chef/updateDeveloper}">Update Developer</a>
-          <a class="collapse-item" th:href="@{/chef/deleteDeveloper}">Delete Developer</a>
-          <a class="collapse-item" th:href="@{/chef/viewDevelopers}">View Developers</a>
-        </div>
-      </div>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
     <!-- Project Management -->
     <div class="sidebar-heading">Project Management</div>
     <li class="nav-item">
@@ -109,37 +77,27 @@
         <span>Create Project</span>
       </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item active">
       <a class="nav-link" th:href="@{/chef/updateProject}">
         <i class="fas fa-fw fa-edit"></i>
         <span>Update Project</span>
       </a>
     </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Additional Features -->
     <li class="nav-item">
-      <a class="nav-link" th:href="@{/chef/findDeveloper}">
-        <i class="fas fa-fw fa-search"></i>
-        <span>Find Developer</span>
+      <a class="nav-link" th:href="@{/chef/deleteProject}">
+        <i class="fas fa-fw fa-trash-alt"></i>
+        <span>Delete Project</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" th:href="@{/chef/evaluateDeveloper}">
-        <i class="fas fa-fw fa-star"></i>
-        <span>Evaluate Developer</span>
+      <a class="nav-link" th:href="@{/chef/viewProjects}">
+        <i class="fas fa-fw fa-eye"></i>
+        <span>View Projects</span>
       </a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
-
-    <!-- Sidebar Toggler -->
-    <div class="text-center d-none d-md-inline">
-      <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
 
   </ul>
   <!-- End of Sidebar -->
@@ -179,56 +137,59 @@
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
+
         <div class="row">
 
-          <!-- Update Developer Form -->
+          <!-- Update Project Form -->
           <div class="col-md-6">
-            <h4>Update Developer</h4>
-            <form th:action="@{/chef/updateDeveloper}" method="post">
+            <h4>Update Project</h4>
+            <form th:action="@{/chef/updateProject}" method="post" th:object="${project}">
               <div class="mb-3">
-                <label for="developerId" class="form-label">Select Developer</label>
-                <select name="developerId" id="developerId" class="form-select" required>
-                  <option value="" disabled selected>Select a developer</option>
-                  <option th:each="dev : ${developers}" th:value="${dev.id}" th:text="${dev.nom}"></option>
+                <label for="projectId" class="form-label">Select Project</label>
+                <select name="projectId" id="projectId" class="form-select" required>
+                  <option value="" disabled selected>Select a project</option>
+                  <option th:each="project : ${projects}" th:value="${project.idP}" th:text="${project.title}"></option>
                 </select>
               </div>
               <div class="mb-3">
-                <label for="competence" class="form-label">Competence</label>
-                <input type="text" name="competence" id="competence" class="form-control" placeholder="Enter new competence">
+                <label for="title" class="form-label">New Title</label>
+                <input type="text" name="title" class="form-control" id="title" placeholder="Enter title" required th:field="*{title}">
               </div>
               <div class="mb-3">
-                <label for="experience" class="form-label">Experience (years)</label>
-                <input type="number" name="experience" id="experience" class="form-control" placeholder="Enter new experience in years">
+                <label for="description" class="form-label">New Description</label>
+                <textarea name="description" class="form-control" id="description" rows="4" placeholder="Enter description" required th:field="*{description}"></textarea>
               </div>
               <div class="mb-3">
-                <label for="login" class="form-label">Login</label>
-                <input type="text" name="login" id="login" class="form-control" placeholder="Enter new Login">
+                <label for="requiredCompetence" class="form-label">New Required Competence</label>
+                <input type="text" name="requiredCompetence" class="form-control" id="requiredCompetence" placeholder="Enter competence" required th:field="*{requiredCompetence}">
               </div>
               <div class="mb-3">
-                <label for="newPassword" class="form-label">New Password</label>
-                <input type="password" name="newPassword" id="newPassword" class="form-control" placeholder="Enter new password">
+                <label for="estimatedTime" class="form-label">New Estimated Time (months)</label>
+                <input type="number" name="estimatedTime" class="form-control" id="estimatedTime" placeholder="Enter estimated time" required th:field="*{estimatedTime}">
               </div>
-              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="submit" class="btn btn-primary">Update Project</button>
             </form>
           </div>
 
-          <!-- Developers List -->
+          <!-- Projects List -->
           <div class="col-md-6">
-            <h4>Developers</h4>
-            <div class="scrollable-table">
+            <h4>Existing Projects</h4>
+            <div class="project-list">
               <table class="table table-bordered">
                 <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Competence</th>
-                  <th>Experience</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Required Competence</th>
+                  <th>Estimated Time</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="dev : ${developers}">
-                  <td th:text="${dev.nom}"></td>
-                  <td th:text="${dev.competence}"></td>
-                  <td th:text="${dev.experience} + ' years'"></td>
+                <tr th:each="project : ${projects}">
+                  <td th:text="${project.title}"></td>
+                  <td th:text="${project.description}"></td>
+                  <td th:text="${project.requiredCompetence}"></td>
+                  <td th:text="${project.estimatedTime}"></td>
                 </tr>
                 </tbody>
               </table>
@@ -236,6 +197,7 @@
           </div>
 
         </div>
+
       </div>
       <!-- /.container-fluid -->
 

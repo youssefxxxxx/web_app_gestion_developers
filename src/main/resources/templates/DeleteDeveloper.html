@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Update Developer</title>
+  <title>Delete Developer</title>
 
   <!-- Custom fonts and styles -->
   <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet">
@@ -33,10 +33,23 @@
       font-size: 20px;
     }
 
-    .scrollable-table {
+    .developer-list {
       max-height: 300px;
       overflow-y: auto;
-      font-size: 14px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .developer-list table {
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .developer-list table th,
+    .developer-list table td {
+      padding: 5px;
     }
   </style>
 </head>
@@ -144,6 +157,11 @@
   </ul>
   <!-- End of Sidebar -->
 
+  <!-- Error Message -->
+  <div th:if="${errorMessage}">
+    <strong>Error:</strong> <span th:text="${errorMessage}"></span>
+  </div>
+
   <!-- Content Wrapper -->
   <div id="content-wrapper" class="d-flex flex-column">
 
@@ -179,62 +197,43 @@
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
-        <div class="row">
+        <h1 class="h3 mb-4 text-gray-800">Delete Developer</h1>
 
-          <!-- Update Developer Form -->
+        <div class="row">
+          <!-- Left: Delete Form -->
           <div class="col-md-6">
-            <h4>Update Developer</h4>
-            <form th:action="@{/chef/updateDeveloper}" method="post">
+            <form th:action="@{/chef/deleteDeveloper}" method="post">
               <div class="mb-3">
-                <label for="developerId" class="form-label">Select Developer</label>
+                <label for="developerId" class="form-label">Select Developer to Delete</label>
                 <select name="developerId" id="developerId" class="form-select" required>
                   <option value="" disabled selected>Select a developer</option>
-                  <option th:each="dev : ${developers}" th:value="${dev.id}" th:text="${dev.nom}"></option>
+                  <option th:each="developer : ${developers}" th:value="${developer.id}" th:text="${developer.nom}"></option>
                 </select>
               </div>
-              <div class="mb-3">
-                <label for="competence" class="form-label">Competence</label>
-                <input type="text" name="competence" id="competence" class="form-control" placeholder="Enter new competence">
-              </div>
-              <div class="mb-3">
-                <label for="experience" class="form-label">Experience (years)</label>
-                <input type="number" name="experience" id="experience" class="form-control" placeholder="Enter new experience in years">
-              </div>
-              <div class="mb-3">
-                <label for="login" class="form-label">Login</label>
-                <input type="text" name="login" id="login" class="form-control" placeholder="Enter new Login">
-              </div>
-              <div class="mb-3">
-                <label for="newPassword" class="form-label">New Password</label>
-                <input type="password" name="newPassword" id="newPassword" class="form-control" placeholder="Enter new password">
-              </div>
-              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </div>
 
-          <!-- Developers List -->
-          <div class="col-md-6">
-            <h4>Developers</h4>
-            <div class="scrollable-table">
-              <table class="table table-bordered">
-                <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Competence</th>
-                  <th>Experience</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="dev : ${developers}">
-                  <td th:text="${dev.nom}"></td>
-                  <td th:text="${dev.competence}"></td>
-                  <td th:text="${dev.experience} + ' years'"></td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
+          <!-- Right: List of Developers -->
+          <div class="col-md-6 developer-list">
+            <h5>List of Developers</h5>
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Competence</th>
+                <th>Experience</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="developer : ${developers}">
+                <td th:text="${developer.nom}"></td>
+                <td th:text="${developer.competence}"></td>
+                <td th:text="${developer.experience}"></td>
+              </tr>
+              </tbody>
+            </table>
           </div>
-
         </div>
       </div>
       <!-- /.container-fluid -->

@@ -31,65 +31,29 @@ public class DeveloperController {
     /**
      * Redirect to Update Account page with preloaded user data.
      */
-    @GetMapping("/developer/updateAccount")
-    public String updateAccountPage2(HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
-        if (userId == null) {
-            return "redirect:/login"; // Redirect to login if session expired
-        }
-
-        // Fetch user details and add to the model
-        User user = developerService.getUserById(userId);
-        model.addAttribute("user", user);
-
-        return "UpdateAccount"; // Render UpdateAccount.html
-    }
-
-    /**
-     * Handle Update Account form submission.
-     */
-    @PostMapping("/developer/updateAccount")
-    public String handleUpdateAccount2(
-            HttpSession session,
-            String newLogin,
-            String oldPassword,
-            String newPassword,
-            String newConfirmedPassword,
-            String competence,
-            int experience,
-            Model model) {
-
-        Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
-        if (userId == null) {
-            return "redirect:/login"; // Redirect to login if session expired
-        }
-
-        try {
-            // Update the user account
-            developerService.updateAccount(userId,newLogin, oldPassword, newPassword, newConfirmedPassword, competence, experience);
-
-            // On success, invalidate the session and redirect to login
-            session.invalidate();
-            return "redirect:/login";
-        } catch (RuntimeException ex) {
-            // Handle errors and display them on the same page
-            model.addAttribute("errorMessage", ex.getMessage());
-
-            // Re-fetch user details to display them in the form
-            User user = developerService.getUserById(userId);
-            model.addAttribute("user", user);
-
-            return "UpdateAccount"; // Stay on the UpdateAccount page
-        }
-    }
 
     /**
      * Developer Home Page.
      */
     @GetMapping("/developer/home")
-    public String developerHome() {
+    public String developerHome(HttpSession session, Model model) {
+        // Retrieve the user ID from the session
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login"; // Redirect to login if session expired
+        }
+
+        // Fetch the user from the database
+        User user = userService.getUserById(userId);
+        System.out.println("user.getNom()");
+        System.out.println(user.getNom());
+        // Add the user's name to the model
+        model.addAttribute("nameUser", user.getNom());
+
         return "DevHome"; // Render DevHome.html
     }
+
 
 
 
@@ -147,5 +111,58 @@ public class DeveloperController {
         model.addAttribute("evaluations", evaluations);
 
         return "ConsultEvaluation"; // Render the ConsultEvaluations.html page
+    }
+
+
+    //for Updating account
+    @GetMapping("/developer/updateAccount")
+    public String updateAccountPage1(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
+        if (userId == null) {
+            return "redirect:/login"; // Redirect to login if session expired
+        }
+        // Fetch user details and add to the model
+        User user = developerService.getUserById(userId);
+        model.addAttribute("user", user);
+
+        return "UpdateAccountDev"; // Render UpdateAccount.html
+    }
+
+    /**
+     * Handle Update Account form submission.
+     */
+    @PostMapping("/developer/updateAccount")
+    public String handleUpdateAccount1(
+            HttpSession session,
+            String newLogin,
+            String oldPassword,
+            String newPassword,
+            String newConfirmedPassword,
+            String competence,
+            int experience,
+            Model model) {
+
+        Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
+        if (userId == null) {
+            return "redirect:/login"; // Redirect to login if session expired
+        }
+
+        try {
+            // Update the user account
+            developerService.updateAccount(userId,newLogin,oldPassword, newPassword, newConfirmedPassword, competence, experience);
+
+            // On success, invalidate the session and redirect to login
+            session.invalidate();
+            return "redirect:/developer/home";
+        } catch (RuntimeException ex) {
+            // Handle errors and display them on the same page
+            model.addAttribute("errorMessage", ex.getMessage());
+
+            // Re-fetch user details to display them in the form
+            User user = developerService.getUserById(userId);
+            model.addAttribute("user", user);
+
+            return "UpdateAccountDev"; // Stay on the UpdateAccount page
+        }
     }
 }

@@ -65,4 +65,14 @@ public class UserService implements IUserService {
         // Save updated developer
         userRepository.save(existingDeveloper);
     }
+    public void deleteDeveloper(Long developerId) {
+        // Check if the developer exists
+        if (!userRepository.existsById(developerId)) {
+            throw new RuntimeException("Developer with ID " + developerId + " does not exist.");
+        }
+
+        // Delete the developer
+        userRepository.deleteById(developerId);
+    }
+
 }

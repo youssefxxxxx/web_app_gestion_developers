@@ -90,10 +90,10 @@
 
                     <!-- User Information Dropdown -->
                     <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${nameUser}">Developer</span>
-                            <img class="img-profile rounded-circle" src="/img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="/iMAGE/undraw_profile.svg">
                         </a>
                         <!-- Dropdown -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -116,48 +116,8 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <div class="d-sm-flex align-items-center justify-content-center">
                     <h1 class="h3 mb-0 text-gray-800">Welcome, <span th:text="${nameUser}">Developer</span>!</h1>
-                </div>
-                <div class="row">
-                    <!-- Account Management -->
-                    <div class="col-lg-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Account Management</h6>
-                            </div>
-                            <div class="card-body">
-                                <p>Update your account details.</p>
-                                <a th:href="@{/developer/updateAccount}" class="btn btn-primary">Update Account</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Consult Projects -->
-                    <div class="col-lg-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Consult Projects</h6>
-                            </div>
-                            <div class="card-body">
-                                <p>View your assigned projects.</p>
-                                <a th:href="@{/developer/currentProjects}" class="btn btn-primary">Consult Projects</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Consult Evaluations -->
-                    <div class="col-lg-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Consult Evaluations</h6>
-                            </div>
-                            <div class="card-body">
-                                <p>View your evaluation notes and feedback.</p>
-                                <a th:href="@{/developer/evaluations}" class="btn btn-primary">Consult Evaluations</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -185,4 +145,5 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>

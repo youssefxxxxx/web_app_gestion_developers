@@ -36,4 +36,19 @@ public class ProjectService {
     public List<Project> getProjectsByDeveloper(Long userId) {
         return assignmentRepository.findProjectsByUserId(userId);
     }
+
+    public void updateProject(Project updatedProject) {
+        // Fetch the existing project from the database
+        Project existingProject = projectRepository.findById(updatedProject.getIdP())
+                .orElseThrow(() -> new RuntimeException("Project not found with ID: " + updatedProject.getIdP()));
+
+        // Update project fields
+        existingProject.setTitle(updatedProject.getTitle());
+        existingProject.setDescription(updatedProject.getDescription());
+        existingProject.setRequiredCompetence(updatedProject.getRequiredCompetence());
+        existingProject.setEstimatedTime(updatedProject.getEstimatedTime());
+
+        // Save the updated project back to the repository
+        projectRepository.save(existingProject);
+    }
 }

@@ -43,7 +43,7 @@ public class LoginController {
 
             // Redirect based on role
             if ("dev".equalsIgnoreCase(existingUser.getRole())) {
-                return "redirect:/Dev"; // Redirect to DevHome.html
+                return "redirect:/developer/home"; // Redirect to DevHome.html
             } else if ("chef".equalsIgnoreCase(existingUser.getRole())) {
                 return "redirect:/Chef"; // Redirect to ChefHome.html
             } else {

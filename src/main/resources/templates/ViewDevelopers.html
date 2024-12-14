@@ -3,12 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Create Developer</title>
+    <title>View Developers</title>
 
     <!-- Custom fonts and styles -->
     <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet">
@@ -16,14 +15,17 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <style>
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
         }
 
-        .error-message {
-            color: red;
-            font-size: 12px;
+        table {
+            font-size: 14px;
+        }
+
+        h1 {
+            font-size: 20px;
         }
     </style>
 </head>
@@ -68,10 +70,55 @@
         </li>
 
         <!-- Developer CRUD -->
-        <li class="nav-item active">
-            <a class="nav-link" th:href="@{/chef/createDeveloper}">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#developerCrudMenu"
+               aria-expanded="false" aria-controls="developerCrudMenu">
                 <i class="fas fa-fw fa-users-cog"></i>
-                <span>Create Developer</span>
+                <span>Developer CRUD</span>
+            </a>
+            <div id="developerCrudMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Manage Developers:</h6>
+                    <a class="collapse-item" th:href="@{/chef/createDeveloper}">Create Developer</a>
+                    <a class="collapse-item" th:href="@{/chef/updateDeveloper}">Update Developer</a>
+                    <a class="collapse-item" th:href="@{/chef/deleteDeveloper}">Delete Developer</a>
+                    <a class="collapse-item active" th:href="@{/chef/viewDevelopers}">View Developers</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Project Management -->
+        <div class="sidebar-heading">Project Management</div>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/chef/createProject}">
+                <i class="fas fa-fw fa-folder-plus"></i>
+                <span>Create Project</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/chef/updateProject}">
+                <i class="fas fa-fw fa-edit"></i>
+                <span>Update Project</span>
+            </a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Additional Features -->
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/chef/findDeveloper}">
+                <i class="fas fa-fw fa-search"></i>
+                <span>Find Developer</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/chef/evaluateDeveloper}">
+                <i class="fas fa-fw fa-star"></i>
+                <span>Evaluate Developer</span>
             </a>
         </li>
 
@@ -121,45 +168,30 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <div class="form-container">
+                <h1 class="h3 mb-4 text-gray-800">Developers List</h1>
 
-                    <h2>Create Developer</h2>
-                    <p>Fill in the developer's details below.</p>
-
-                    <!-- Error Message -->
-                    <div th:if="${errorMessage}" class="alert alert-danger">
-                        <p th:text="${errorMessage}"></p>
-                    </div>
-
-                    <form th:action="@{/chef/createDeveloper}" method="post" th:object="${developer}">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" name="nom" class="form-control" id="name" placeholder="Enter developer name" required th:field="*{nom}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="login" class="form-label">Login</label>
-                            <input type="text" name="login" class="form-control" id="login" placeholder="Enter login" required th:field="*{login}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" name="motDePasse" class="form-control" id="password" placeholder="Enter password" required th:field="*{motDePasse}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" name="confirmMotDePasse" class="form-control" id="confirmPassword" placeholder="Confirm password" required th:field="*{confirmePassword}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="competence" class="form-label">Competence</label>
-                            <input type="text" name="competence" class="form-control" id="competence" placeholder="Enter developer competence" required th:field="*{competence}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="experience" class="form-label">Experience (years)</label>
-                            <input type="number" name="experience" class="form-control" id="experience" placeholder="Enter experience in years" required th:field="*{experience}">
-                        </div>
-                        <input type="hidden" name="role" value="dev" th:field="*{role}">
-                        <button type="submit" class="btn btn-primary">Create Developer</button>
-                    </form>
-
+                <!-- Developers Table -->
+                <div class="table-container">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Competence</th>
+                            <th>Experience (years)</th>
+                            <th>Availability</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="developer, iterStat : ${developers}">
+                            <td th:text="${iterStat.count}"></td>
+                            <td th:text="${developer.nom}"></td>
+                            <td th:text="${developer.competence}"></td>
+                            <td th:text="${developer.experience}"></td>
+                            <td th:text="${developer.disponibilite ? 'Available' : 'Not Available'}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!-- /.container-fluid -->
