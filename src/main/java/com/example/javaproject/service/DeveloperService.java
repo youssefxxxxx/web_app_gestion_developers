@@ -38,7 +38,7 @@ public class DeveloperService implements IDeveloperService {
      */
     @Override
     public void updateAccount(Long userId, String newLogin, String oldPassword, String newPassword,
-                              String confirmPassword, String competence, int experience) {
+                              String confirmPassword, String competence, int experience, boolean availability) {
         // Fetch user from database
         User user = getUserById(userId);
 
@@ -66,10 +66,12 @@ public class DeveloperService implements IDeveloperService {
         // Update other user details
         user.setCompetence(competence);
         user.setExperience(experience);
+        user.setDisponibilite(availability); // Update the availability status
 
         // Save updated user to the database
         userRepository.save(user);
     }
+
 
     /**
      * Find developers based on their competence and experience.

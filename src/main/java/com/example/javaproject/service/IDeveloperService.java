@@ -26,7 +26,8 @@ public interface IDeveloperService {
      * @param experience       User's updated experience.
      */
     void updateAccount(Long userId, String newLogin, String oldPassword, String newPassword,
-                       String confirmPassword, String competence, int experience);
+                       String confirmPassword, String competence, int experience, boolean availability);
+
 
     /**
      * Find developers based on their competence and experience.

@@ -140,29 +140,24 @@ public class DeveloperController {
             String newConfirmedPassword,
             String competence,
             int experience,
+            boolean availability,
             Model model) {
 
-        Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
+        Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
-            return "redirect:/login"; // Redirect to login if session expired
+            return "redirect:/login";
         }
 
         try {
-            // Update the user account
-            developerService.updateAccount(userId,newLogin,oldPassword, newPassword, newConfirmedPassword, competence, experience);
-
-            // On success, invalidate the session and redirect to login
+            developerService.updateAccount(userId, newLogin, oldPassword, newPassword, newConfirmedPassword, competence, experience, availability);
             session.invalidate();
             return "redirect:/developer/home";
         } catch (RuntimeException ex) {
-            // Handle errors and display them on the same page
             model.addAttribute("errorMessage", ex.getMessage());
-
-            // Re-fetch user details to display them in the form
             User user = developerService.getUserById(userId);
             model.addAttribute("user", user);
-
-            return "UpdateAccountDev"; // Stay on the UpdateAccount page
+            return "UpdateAccountDev";
         }
     }
+
 }

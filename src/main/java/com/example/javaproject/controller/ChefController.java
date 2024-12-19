@@ -104,6 +104,7 @@ public class ChefController {
             String newConfirmedPassword,
             String competence,
             int experience,
+            @RequestParam("availability") boolean availability, // Added availability
             Model model) {
 
         Long userId = (Long) session.getAttribute("userId"); // Retrieve userId from session
@@ -113,9 +114,11 @@ public class ChefController {
 
         try {
             // Update the user account
-            developerService.updateAccount(userId,newLogin,oldPassword, newPassword, newConfirmedPassword, competence, experience);
+            developerService.updateAccount(
+                    userId, newLogin, oldPassword, newPassword,
+                    newConfirmedPassword, competence, experience, availability);
 
-            // On success, invalidate the session and redirect to login
+            // On success, invalidate the session and redirect to home
             session.invalidate();
             return "redirect:/chef/home";
         } catch (RuntimeException ex) {
@@ -129,6 +132,7 @@ public class ChefController {
             return "UpdateAccount"; // Stay on the UpdateAccount page
         }
     }
+
     //for creating page
     // Display the Create Project page
     @GetMapping("/chef/createProject")
@@ -359,7 +363,7 @@ public class ChefController {
             userService.saveDeveloper(developer);
 
             // Redirect to the Developer CRUD or another success page
-            return "CreateDeveloper";
+            return "redirect:/chef/home";
         } catch (Exception ex) {
             // Handle errors and display them on the same page
             model.addAttribute("errorMessage", "Error creating developer: " + ex.getMessage());

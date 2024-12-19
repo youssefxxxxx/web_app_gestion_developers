@@ -13,8 +13,6 @@
     <!-- Custom fonts and styles -->
     <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet">
     <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-    <!-- Optional: Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 </head>
 
@@ -50,7 +48,7 @@
 
         <!-- Account & Projects -->
         <div class="sidebar-heading">Account & Projects</div>
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" th:href="@{/developer/updateAccount}">
                 <i class="fas fa-fw fa-user-cog"></i>
                 <span>Update Account</span>
@@ -94,7 +92,7 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${nameUser}">Developer</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.nom}">Developer</span>
                             <img class="img-profile rounded-circle" src="/iMAGE/undraw_profile.svg">
                         </a>
                         <!-- Dropdown -->
@@ -146,6 +144,12 @@
                 <div class="card shadow-sm mb-3">
                     <div class="card-body">
                         <strong>Experience:</strong> <span th:text="${user.experience}"></span> years
+                    </div>
+                </div>
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <strong>Availability:</strong>
+                        <span th:text="${user.disponibilite} ? 'Available' : 'Not Available'"></span>
                     </div>
                 </div>
             </div>
